@@ -27,17 +27,17 @@ public class PasswordEncoderDiagnostic {
     @EventListener(ApplicationReadyEvent.class)
     public void diagnose() {
         log.info("=== PasswordEncoder Diagnostic ===");
-        log.info("PasswordEncoder class: {}", passwordEncoder.getClass().getName());
-
-        String freshHash = passwordEncoder.encode("sample");
-        log.info("Fresh hash of 'sample': {}", freshHash);
-        log.info("matches('sample', freshHash): {}", passwordEncoder.matches("sample", freshHash));
 
         userRepository.findByUsername("sample").ifPresentOrElse(user -> {
             String dbHash = user.getPassword();
-            log.info("DB hash for 'sample': {}", dbHash);
-            log.info("DB hash length: {}", dbHash != null ? dbHash.length() : 0);
-            log.info("matches('sample', dbHash): {}", passwordEncoder.matches("sample", dbHash));
+            boolean ok = passwordEncoder.matches("sample", dbHash);
+            log.info("DB hash matches('sample'): {}", ok);
+            if (!ok) {
+                // 壊れたハッシュを正しい BCrypt ハッシュに修正する（一時対応）
+                user.setPassword(passwordEncoder.encode("sample"));
+                userRepository.save(user);
+                log.info("'sample' ユーザーのパスワードハッシュを修正しました");
+            }
         }, () -> log.info("User 'sample' not found in DB"));
 
         log.info("=== End Diagnostic ===");
