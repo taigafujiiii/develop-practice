@@ -3,3 +3,11 @@ builder = "dockerfile"
 
 [deploy]
 startCommand = "java -Dspring.profiles.active=prod -jar app.jar"
+
+[variables]
+DATABASE_URL = "${{Postgres.DATABASE_URL}}"
+PGHOST = "${{Postgres.PGHOST}}"
+PGPORT = "${{Postgres.PGPORT}}"
+PGDATABASE = "${{Postgres.PGDATABASE}}"
+PGUSER = "${{Postgres.PGUSER}}"
+PGPASSWORD = "${{Postgres.PGPASSWORD}}"
