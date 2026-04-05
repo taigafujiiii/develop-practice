@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>受注登録</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-receipt me-2 text-warning"></i>受注登録</h4>
+  </div>
+
+  <form th:action="@{/orders}" th:object="${orderForm}" method="post">
+    <div class="row g-3">
+      <!-- 受注ヘッダ -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header fw-semibold bg-white">受注情報</div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">顧客 <span class="text-danger">*</span></label>
+                <select class="form-select"
+                        th:field="*{customerId}"
+                        th:classappend="${#fields.hasErrors('customerId')} ? 'is-invalid'">
+                  <option value="">選択してください</option>
+                  <option th:each="c : ${customers}"
+                          th:value="${c.id}"
+                          th:text="${c.customerName}"></option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{customerId}"></div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">受注日 <span class="text-danger">*</span></label>
+                <input type="date" class="form-control"
+                       th:field="*{orderDate}"
+                       th:classappend="${#fields.hasErrors('orderDate')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{orderDate}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 受注明細 -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header fw-semibold bg-white d-flex justify-content-between align-items-center">
+            受注明細
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addDetail()">
+              <i class="bi bi-plus-lg me-1"></i>行を追加
+            </button>
+          </div>
+          <div class="card-body p-0">
+            <table class="table mb-0" id="detailTable">
+              <thead>
+                <tr>
+                  <th class="ps-3" style="width:50%">商品</th>
+                  <th style="width:20%">数量</th>
+                  <th style="width:20%">単価</th>
+                  <th style="width:10%"></th>
+                </tr>
+              </thead>
+              <tbody id="detailBody">
+                <tr th:each="d, idx : *{details}" th:id="'row-' + ${idx.index}">
+                  <td class="ps-3">
+                    <select th:field="*{details[__${idx.index}__].productId}"
+                            class="form-select form-select-sm product-select"
+                            onchange="updatePrice(this)">
+                      <option value="">商品を選択</option>
+                      <option th:each="p : ${products}"
+                              th:value="${p.id}"
+                              th:text="${p.productName} + ' (' + ${#numbers.formatInteger(p.unitPrice, 1, 'COMMA')} + '円)'"
+                              th:attr="data-price=${p.unitPrice}"></option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm qty-input" min="1"
+                           th:field="*{details[__${idx.index}__].quantity}"
+                           onchange="updatePrice(this)">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm price-display bg-light" readonly placeholder="—">
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRow(this)">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-warning text-dark fw-semibold">
+          <i class="bi bi-check-lg me-1"></i>受注を登録する
+        </button>
+        <a th:href="@{/orders}" class="btn btn-outline-secondary">キャンセル</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<th:block layout:fragment="scripts">
+<script th:inline="javascript">
+  /* 提供済み JavaScript（変更不要） */
+  const products = /*[[${products}]]*/ [];
+  let rowIndex = /*[[${#lists.size(orderForm.details)}]]*/ 1;
+
+  function addDetail() {
+    const body = document.getElementById('detailBody');
+    const opts = products.map(p =>
+      `<option value="${p.id}" data-price="${p.unitPrice}">${p.productName} (${p.unitPrice.toLocaleString()}円)</option>`
+    ).join('');
+    const row = `<tr id="row-${rowIndex}">
+      <td class="ps-3">
+        <select name="details[${rowIndex}].productId" class="form-select form-select-sm product-select" onchange="updatePrice(this)">
+          <option value="">商品を選択</option>${opts}
+        </select>
+      </td>
+      <td><input type="number" name="details[${rowIndex}].quantity" class="form-control form-control-sm qty-input" min="1" value="1" onchange="updatePrice(this)"></td>
+      <td><input type="text" class="form-control form-control-sm price-display bg-light" readonly placeholder="—"></td>
+      <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRow(this)"><i class="bi bi-x"></i></button></td>
+    </tr>`;
+    body.insertAdjacentHTML('beforeend', row);
+    rowIndex++;
+  }
+
+  function removeRow(btn) {
+    btn.closest('tr').remove();
+  }
+
+  function updatePrice(el) {
+    const row = el.closest('tr');
+    const select = row.querySelector('.product-select');
+    const qty = parseInt(row.querySelector('.qty-input').value) || 0;
+    const opt = select.options[select.selectedIndex];
+    const price = parseInt(opt?.dataset?.price || 0);
+    const display = row.querySelector('.price-display');
+    display.value = price && qty ? '¥' + (price * qty).toLocaleString() : '—';
+  }
+</script>
+</th:block>
+</body>
+</html>

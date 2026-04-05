@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>商品登録</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header">
+    <h4 class="mb-0 fw-bold">
+      <i class="bi bi-box me-2 text-success"></i>
+      <span th:text="${productId != null} ? '商品編集' : '商品登録'"></span>
+    </h4>
+  </div>
+
+  <div class="card" style="max-width:520px;">
+    <div class="card-body p-4">
+      <form th:action="${productId != null} ? @{/products/{id}(id=${productId})} : @{/products}"
+            th:object="${productForm}" method="post">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">商品名 <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 th:field="*{productName}"
+                 th:classappend="${#fields.hasErrors('productName')} ? 'is-invalid'">
+          <div class="invalid-feedback" th:errors="*{productName}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">カテゴリ</label>
+          <select class="form-select" th:field="*{category}">
+            <option value="">選択してください</option>
+            <option value="ソフトウェア">ソフトウェア</option>
+            <option value="ハードウェア">ハードウェア</option>
+            <option value="サービス">サービス</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label class="form-label fw-semibold">単価（円） <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" min="1"
+                   th:field="*{unitPrice}"
+                   th:classappend="${#fields.hasErrors('unitPrice')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{unitPrice}"></div>
+          </div>
+          <div class="col">
+            <label class="form-label fw-semibold">在庫数 <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" min="0"
+                   th:field="*{stockQuantity}"
+                   th:classappend="${#fields.hasErrors('stockQuantity')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{stockQuantity}"></div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-lg me-1"></i>
+            <span th:text="${productId != null} ? '更新する' : '登録する'"></span>
+          </button>
+          <a th:href="@{/products}" class="btn btn-outline-secondary">キャンセル</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

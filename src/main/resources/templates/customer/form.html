@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>顧客登録</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header">
+    <h4 class="mb-0 fw-bold">
+      <i class="bi bi-people me-2 text-primary"></i>
+      <span th:text="${customerId != null} ? '顧客編集' : '顧客登録'"></span>
+    </h4>
+  </div>
+
+  <div class="card" style="max-width:560px;">
+    <div class="card-body p-4">
+      <form th:action="${customerId != null} ? @{/customers/{id}(id=${customerId})} : @{/customers}"
+            th:object="${customerForm}" method="post">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">顧客名 <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 th:field="*{customerName}"
+                 th:classappend="${#fields.hasErrors('customerName')} ? 'is-invalid'">
+          <div class="invalid-feedback" th:errors="*{customerName}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">電話番号</label>
+          <input type="text" class="form-control" placeholder="例: 03-1234-5678"
+                 th:field="*{phone}"
+                 th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+          <div class="invalid-feedback" th:errors="*{phone}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">郵便番号</label>
+          <input type="text" class="form-control" placeholder="例: 100-0001"
+                 th:field="*{postalCode}"
+                 th:classappend="${#fields.hasErrors('postalCode')} ? 'is-invalid'">
+          <div class="invalid-feedback" th:errors="*{postalCode}"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">住所</label>
+          <input type="text" class="form-control" th:field="*{address}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">メールアドレス</label>
+          <input type="email" class="form-control" placeholder="例: info@example.com"
+                 th:field="*{email}"
+                 th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+          <div class="invalid-feedback" th:errors="*{email}"></div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>
+            <span th:text="${customerId != null} ? '更新する' : '登録する'"></span>
+          </button>
+          <a th:href="@{/customers}" class="btn btn-outline-secondary">キャンセル</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

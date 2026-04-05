@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>顧客一覧</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-people me-2 text-primary"></i>顧客管理</h4>
+    <a th:href="@{/customers/new}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>新規登録
+    </a>
+  </div>
+
+  <!-- 検索フォーム -->
+  <form th:action="@{/customers}" method="get" class="mb-3 d-flex align-items-center gap-2">
+    <input type="text" name="name" class="form-control form-control-sm"
+           th:value="${name}"
+           placeholder="顧客名で検索" style="width:200px;">
+    <button type="submit" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-search me-1"></i>検索
+    </button>
+    <a th:if="${name != null and !name.isEmpty()}"
+       th:href="@{/customers}" class="btn btn-link btn-sm text-muted">クリア</a>
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th class="ps-3">顧客名</th>
+            <th>電話番号</th>
+            <th>メールアドレス</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="c : ${customers}">
+            <td class="ps-3 fw-semibold" th:text="${c.customerName}"></td>
+            <td th:text="${c.phone}"></td>
+            <td th:text="${c.email}"></td>
+            <td class="text-end pe-3">
+              <a th:href="@{/customers/{id}/edit(id=${c.id})}" class="btn btn-outline-secondary btn-sm me-1">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form th:action="@{/customers/{id}/delete(id=${c.id})}" method="post" class="d-inline"
+                    onsubmit="return confirm('削除しますか？')">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(customers)}">
+            <td colspan="4" class="text-center text-muted py-4">顧客データがありません</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-muted small">
+      <span th:text="${#lists.size(customers)}"></span> 件
+    </div>
+  </div>
+</div>
+</body>
+</html>

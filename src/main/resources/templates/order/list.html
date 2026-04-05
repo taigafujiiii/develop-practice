@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>受注一覧</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-receipt me-2 text-warning"></i>受注管理</h4>
+    <a th:href="@{/orders/new}" class="btn btn-warning btn-sm text-dark">
+      <i class="bi bi-plus-lg me-1"></i>新規受注
+    </a>
+  </div>
+
+  <!-- ステータス・受注日範囲フィルター -->
+  <form th:action="@{/orders}" method="get" class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+    <select name="status" class="form-select form-select-sm" style="width:180px;">
+      <option value="">すべてのステータス</option>
+      <option value="PENDING"    th:selected="${selectedStatus == 'PENDING'}">受注待ち</option>
+      <option value="PROCESSING" th:selected="${selectedStatus == 'PROCESSING'}">処理中</option>
+      <option value="SHIPPED"    th:selected="${selectedStatus == 'SHIPPED'}">出荷済み</option>
+      <option value="COMPLETED"  th:selected="${selectedStatus == 'COMPLETED'}">完了</option>
+    </select>
+    <input type="date" name="from" class="form-control form-control-sm" style="width:160px;"
+           th:value="${from}">
+    <span class="text-muted small">〜</span>
+    <input type="date" name="to" class="form-control form-control-sm" style="width:160px;"
+           th:value="${to}">
+    <button type="submit" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-funnel me-1"></i>絞り込み
+    </button>
+    <a th:href="@{/orders}" class="btn btn-link btn-sm text-muted">クリア</a>
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th class="ps-3">受注番号</th>
+            <th>顧客名</th>
+            <th>受注日</th>
+            <th>ステータス</th>
+            <th class="text-end">合計金額（円）</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="o : ${orders}">
+            <td class="ps-3 text-muted" th:text="'#' + ${o.id}"></td>
+            <td class="fw-semibold" th:text="${o.customer.customerName}"></td>
+            <td th:text="${#temporals.format(o.orderDate, 'yyyy/MM/dd')}"></td>
+            <td>
+              <span class="badge rounded-pill px-3 py-1"
+                    th:classappend="${o.status == 'PENDING'}    ? 'badge-pending'    :
+                                   (${o.status == 'PROCESSING'} ? 'badge-processing' :
+                                   (${o.status == 'SHIPPED'}    ? 'badge-shipped'    : 'badge-completed'))"
+                    th:text="${o.statusLabel}"></span>
+            </td>
+            <td class="text-end fw-semibold"
+                th:text="'¥' + ${#numbers.formatInteger(o.totalAmount, 1, 'COMMA')}"></td>
+            <td class="text-end pe-3">
+              <a th:href="@{/orders/{id}(id=${o.id})}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-eye"></i> 詳細
+              </a>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(orders)}">
+            <td colspan="6" class="text-center text-muted py-4">受注データがありません</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-muted small">
+      <span th:text="${#lists.size(orders)}"></span> 件
+    </div>
+  </div>
+</div>
+</body>
+</html>

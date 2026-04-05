@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>受注詳細</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold">
+      <i class="bi bi-receipt me-2 text-warning"></i>
+      受注詳細 <span class="text-muted fw-normal fs-6" th:text="'#' + ${order.id}"></span>
+    </h4>
+    <a th:href="@{/orders}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>一覧に戻る
+    </a>
+  </div>
+
+  <div class="row g-3">
+    <!-- 受注ヘッダ -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header fw-semibold bg-white">受注情報</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="text-muted small">顧客名</div>
+              <div class="fw-semibold" th:text="${order.customer.customerName}"></div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">受注日</div>
+              <div th:text="${#temporals.format(order.orderDate, 'yyyy年MM月dd日')}"></div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">ステータス</div>
+              <span class="badge rounded-pill px-3 py-1"
+                    th:classappend="${order.status == 'PENDING'}    ? 'badge-pending'    :
+                                   (${order.status == 'PROCESSING'} ? 'badge-processing' :
+                                   (${order.status == 'SHIPPED'}    ? 'badge-shipped'    : 'badge-completed'))"
+                    th:text="${order.statusLabel}"></span>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">合計金額</div>
+              <div class="fw-bold fs-5 text-primary"
+                   th:text="'¥' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 受注明細 -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header fw-semibold bg-white">受注明細</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">商品名</th>
+                <th class="text-end">単価（円）</th>
+                <th class="text-end">数量</th>
+                <th class="text-end pe-3">小計（円）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="d : ${order.details}">
+                <td class="ps-3" th:text="${d.product.productName}"></td>
+                <td class="text-end" th:text="${#numbers.formatInteger(d.unitPrice, 1, 'COMMA')}"></td>
+                <td class="text-end" th:text="${d.quantity}"></td>
+                <td class="text-end pe-3 fw-semibold"
+                    th:text="${#numbers.formatInteger(d.subtotal, 1, 'COMMA')}"></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="table-light">
+                <td colspan="3" class="text-end fw-bold">合計</td>
+                <td class="text-end pe-3 fw-bold text-primary"
+                    th:text="'¥' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
