@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません: " + username));
 
         String storedHash = user.getPassword();
-        log.debug("loadUser: username={}, hash_len={}, hash_prefix={}",
+        log.info("loadUser: username={}, hash_len={}, hash_prefix={}",
                 user.getUsername(),
                 storedHash != null ? storedHash.length() : 0,
                 storedHash != null ? storedHash.substring(0, Math.min(7, storedHash.length())) : "null");
@@ -35,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // BCrypt 照合テスト（デバッグ用）
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         boolean testMatch = encoder.matches("sample", storedHash);
-        log.debug("BCrypt test matches('sample', storedHash) = {}", testMatch);
+        log.info("BCrypt test matches('sample', storedHash) = {}", testMatch);
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
