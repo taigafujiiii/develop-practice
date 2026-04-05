@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>顧客一覧</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-people me-2 text-primary"></i>顧客管理</h4>
+    <!-- TODO: th:href="@{/customers/new}" を追加する -->
+    <a href="#" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>新規登録
+    </a>
+  </div>
+
+  <!-- 検索フォーム -->
+  <!-- TODO: th:action="@{/customers}" を追加する -->
+  <form action="/customers" method="get" class="mb-3 d-flex align-items-center gap-2">
+    <!-- TODO: th:value="${name}" を追加して検索値を保持する -->
+    <input type="text" name="name" class="form-control form-control-sm"
+           placeholder="顧客名で検索" style="width:200px;">
+    <button type="submit" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-search me-1"></i>検索
+    </button>
+    <!-- TODO: 検索中のみ「クリア」リンクを表示する（th:if と th:href を使う） -->
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th class="ps-3">顧客名</th>
+            <th>電話番号</th>
+            <th>メールアドレス</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- TODO: th:each="c : ${customers}" をこの tr タグに追加する -->
+          <tr>
+            <!-- TODO: 各セルの表示値を th:text に変更する -->
+            <td class="ps-3 fw-semibold">顧客名サンプル</td>
+            <td>000-0000-0000</td>
+            <td>sample@example.com</td>
+            <td class="text-end pe-3">
+              <!-- TODO: th:href="@{/customers/{id}/edit(id=${c.id})}" を追加する -->
+              <a href="#" class="btn btn-outline-secondary btn-sm me-1">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <!-- TODO: th:action="@{/customers/{id}/delete(id=${c.id})}" を追加する -->
+              <form action="#" method="post" class="d-inline"
+                    onsubmit="return confirm('削除しますか？')">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <!-- TODO: th:if="${#lists.isEmpty(customers)}" で空の場合の行を表示する -->
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-muted small">
+      <!-- TODO: th:text="${#lists.size(customers)}" で件数を表示する -->
+      0 件
+    </div>
+  </div>
+</div>
+</body>
+</html>

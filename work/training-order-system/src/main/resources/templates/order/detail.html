@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>受注詳細</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold">
+      <i class="bi bi-receipt me-2 text-warning"></i>
+      <!-- TODO: th:text="'#' + ${order.id}" で受注番号を表示する -->
+      受注詳細 <span class="text-muted fw-normal fs-6">#1</span>
+    </h4>
+    <!-- TODO: th:href="@{/orders}" を追加する -->
+    <a href="#" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>一覧に戻る
+    </a>
+  </div>
+
+  <div class="row g-3">
+    <!-- 受注ヘッダ -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header fw-semibold bg-white">受注情報</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="text-muted small">顧客名</div>
+              <!-- TODO: th:text="${order.customer.customerName}" を追加する -->
+              <div class="fw-semibold">顧客名サンプル</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">受注日</div>
+              <!-- TODO: th:text="${#temporals.format(order.orderDate, 'yyyy年MM月dd日')}" を追加する -->
+              <div>2026年01月01日</div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">ステータス</div>
+              <!-- TODO: th:classappend でステータスに応じたバッジクラスを追加する -->
+              <!-- TODO: th:text="${order.statusLabel}" でステータス名を表示する -->
+              <span class="badge rounded-pill px-3 py-1 badge-pending">受注待ち</span>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">合計金額</div>
+              <!-- TODO: th:text="'¥' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}" を追加する -->
+              <div class="fw-bold fs-5 text-primary">¥0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 受注明細 -->
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header fw-semibold bg-white">受注明細</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="ps-3">商品名</th>
+                <th class="text-end">単価（円）</th>
+                <th class="text-end">数量</th>
+                <th class="text-end pe-3">小計（円）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- TODO: th:each="d : ${order.details}" をこの tr タグに追加する -->
+              <tr>
+                <!-- TODO: 各セルに th:text を追加する（金額は #numbers.formatInteger を使う） -->
+                <td class="ps-3">商品名サンプル</td>
+                <td class="text-end">0</td>
+                <td class="text-end">1</td>
+                <td class="text-end pe-3 fw-semibold">0</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="table-light">
+                <td colspan="3" class="text-end fw-bold">合計</td>
+                <!-- TODO: th:text="'¥' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}" を追加する -->
+                <td class="text-end pe-3 fw-bold text-primary">¥0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

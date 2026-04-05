@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>アカウント登録 - 受発注管理システム</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    body { background-color: #f8f9fa; }
+    .register-card { max-width: 400px; margin: 5rem auto; }
+  </style>
+</head>
+<body>
+<div class="register-card">
+  <div class="text-center mb-4">
+    <i class="bi bi-box-seam fs-1 text-primary"></i>
+    <h5 class="mt-2 fw-bold">受発注管理システム</h5>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h6 class="card-title mb-3 fw-bold">アカウント登録</h6>
+
+      <!-- TODO: th:object="${registerForm}" を form タグに追加する -->
+      <form th:action="@{/register}" method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label small fw-semibold">ユーザー名</label>
+          <!-- TODO: th:field="*{username}" と th:classappend を追加する -->
+          <input type="text" id="username" name="username" class="form-control"
+                 placeholder="ユーザー名を入力">
+          <!-- TODO: th:if="${#fields.hasErrors('username')}" でエラーメッセージを表示する -->
+          <!-- TODO: ユーザー名重複エラーのメッセージを表示する（model の usernameError を使う） -->
+          <div th:if="${usernameError}" class="text-danger small mt-1" th:text="${usernameError}"></div>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label small fw-semibold">パスワード</label>
+          <!-- TODO: th:field="*{password}" と th:classappend を追加する -->
+          <input type="password" id="password" name="password" class="form-control"
+                 placeholder="パスワードを入力">
+          <!-- TODO: th:if="${#fields.hasErrors('password')}" でエラーメッセージを表示する -->
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-person-plus me-1"></i>登録する
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="text-center mt-3 small text-muted">
+    アカウントをお持ちの方は
+    <a th:href="@{/login}" class="text-decoration-none">ログイン</a>
+  </div>
+</div>
+</body>
+</html>

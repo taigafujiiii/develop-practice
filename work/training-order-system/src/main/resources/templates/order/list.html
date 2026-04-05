@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>受注一覧</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-receipt me-2 text-warning"></i>受注管理</h4>
+    <!-- TODO: th:href="@{/orders/new}" を追加する -->
+    <a href="#" class="btn btn-warning btn-sm text-dark">
+      <i class="bi bi-plus-lg me-1"></i>新規受注
+    </a>
+  </div>
+
+  <!-- ステータスフィルター（フェーズD で実装） -->
+  <!-- TODO（フェーズD）: th:action="@{/orders}" を追加する -->
+  <form action="/orders" method="get" class="mb-3 d-flex align-items-center gap-2">
+    <!-- TODO（フェーズD）: 選択中のステータスを th:selected で保持する -->
+    <select name="status" class="form-select form-select-sm" style="width:180px;">
+      <option value="">すべてのステータス</option>
+      <option value="PENDING">受注待ち</option>
+      <option value="PROCESSING">処理中</option>
+      <option value="SHIPPED">出荷済み</option>
+      <option value="COMPLETED">完了</option>
+    </select>
+    <button type="submit" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-funnel me-1"></i>絞り込み
+    </button>
+    <!-- TODO（フェーズD）: フィルター中のみ「クリア」リンクを表示する -->
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th class="ps-3">受注番号</th>
+            <th>顧客名</th>
+            <th>受注日</th>
+            <th>ステータス</th>
+            <th class="text-end">合計金額（円）</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- TODO: th:each="o : ${orders}" をこの tr タグに追加する -->
+          <tr>
+            <!-- TODO: 各セルに th:text を追加する -->
+            <!-- ヒント: 受注日は #temporals.format(o.orderDate, 'yyyy/MM/dd') を使う -->
+            <!-- ヒント: 合計金額は #numbers.formatInteger を使う -->
+            <td class="ps-3 text-muted">#1</td>
+            <td class="fw-semibold">顧客名サンプル</td>
+            <td>2026/01/01</td>
+            <td>
+              <!-- TODO: ステータスに応じてバッジの色クラスを切り替える（th:classappend） -->
+              <!-- クラス名: badge-pending / badge-processing / badge-shipped / badge-completed -->
+              <span class="badge rounded-pill px-3 py-1 badge-pending">受注待ち</span>
+            </td>
+            <td class="text-end fw-semibold">¥0</td>
+            <td class="text-end pe-3">
+              <!-- TODO: th:href="@{/orders/{id}(id=${o.id})}" を追加する -->
+              <a href="#" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-eye"></i> 詳細
+              </a>
+            </td>
+          </tr>
+          <!-- TODO: th:if="${#lists.isEmpty(orders)}" で空の場合の行を表示する -->
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-muted small">
+      <!-- TODO: th:text="${#lists.size(orders)}" で件数を表示する -->
+      0 件
+    </div>
+  </div>
+</div>
+</body>
+</html>

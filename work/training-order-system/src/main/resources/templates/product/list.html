@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>商品一覧</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h4 class="mb-0 fw-bold"><i class="bi bi-box me-2 text-success"></i>商品管理</h4>
+    <!-- TODO: th:href="@{/products/new}" を追加する -->
+    <a href="#" class="btn btn-success btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>新規登録
+    </a>
+  </div>
+
+  <!-- カテゴリフィルター（フェーズD で実装） -->
+  <!-- TODO（フェーズD）: th:action="@{/products}" を追加する -->
+  <form action="/products" method="get" class="mb-3 d-flex align-items-center gap-2">
+    <!-- TODO（フェーズD）: 選択中のカテゴリを th:selected で保持する -->
+    <select name="category" class="form-select form-select-sm" style="width:180px;">
+      <option value="">すべてのカテゴリ</option>
+      <option value="ソフトウェア">ソフトウェア</option>
+      <option value="ハードウェア">ハードウェア</option>
+      <option value="サービス">サービス</option>
+      <option value="その他">その他</option>
+    </select>
+    <button type="submit" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-funnel me-1"></i>絞り込み
+    </button>
+    <!-- TODO（フェーズD）: フィルター中のみ「クリア」リンクを表示する -->
+  </form>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th class="ps-3">ID</th>
+            <th>商品名</th>
+            <th>カテゴリ</th>
+            <th class="text-end">単価（円）</th>
+            <th class="text-end">在庫数</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- TODO: th:each="p : ${products}" をこの tr タグに追加する -->
+          <tr>
+            <!-- TODO: 各セルに th:text を追加する（単価は #numbers.formatInteger を使う） -->
+            <td class="ps-3 text-muted">1</td>
+            <td class="fw-semibold">商品名サンプル</td>
+            <td>
+              <!-- TODO: th:if と th:unless でカテゴリの有無を切り替える -->
+              <span class="badge bg-light text-secondary border">カテゴリ</span>
+            </td>
+            <td class="text-end">0</td>
+            <td class="text-end">0</td>
+            <td class="text-end pe-3">
+              <!-- TODO: th:href="@{/products/{id}/edit(id=${p.id})}" を追加する -->
+              <a href="#" class="btn btn-outline-secondary btn-sm me-1">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <!-- TODO: th:action="@{/products/{id}/delete(id=${p.id})}" を追加する -->
+              <form action="#" method="post" class="d-inline"
+                    onsubmit="return confirm('削除しますか？')">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <!-- TODO: th:if="${#lists.isEmpty(products)}" で空の場合の行を表示する -->
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-muted small">
+      <!-- TODO: th:text="${#lists.size(products)}" で件数を表示する -->
+      0 件
+    </div>
+  </div>
+</div>
+</body>
+</html>

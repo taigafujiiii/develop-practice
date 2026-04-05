@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>顧客登録</title></head>
+<body>
+<div layout:fragment="content">
+  <div class="page-header">
+    <h4 class="mb-0 fw-bold">
+      <i class="bi bi-people me-2 text-primary"></i>
+      <!-- TODO: customerId が null かどうかで「顧客編集」「顧客登録」を切り替える（th:text と三項演算子） -->
+      顧客登録
+    </h4>
+  </div>
+
+  <div class="card" style="max-width:560px;">
+    <div class="card-body p-4">
+      <!-- TODO: th:action（新規・編集で切り替え）と th:object="${customerForm}" を追加する -->
+      <form action="#" method="post">
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">顧客名 <span class="text-danger">*</span></label>
+          <!-- TODO: th:field="*{customerName}" と th:classappend（バリデーションエラー時の is-invalid）を追加する -->
+          <input type="text" class="form-control">
+          <!-- TODO: th:errors="*{customerName}" でエラーメッセージを表示する -->
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">電話番号</label>
+          <!-- TODO: th:field と th:classappend を追加する -->
+          <input type="text" class="form-control" placeholder="例: 03-1234-5678">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">郵便番号</label>
+          <!-- TODO: th:field と th:classappend を追加する -->
+          <input type="text" class="form-control" placeholder="例: 100-0001">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">住所</label>
+          <!-- TODO: th:field を追加する -->
+          <input type="text" class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">メールアドレス</label>
+          <!-- TODO: th:field と th:classappend を追加する -->
+          <input type="email" class="form-control" placeholder="例: info@example.com">
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>
+            <!-- TODO: customerId が null かどうかで「更新する」「登録する」を切り替える -->
+            登録する
+          </button>
+          <!-- TODO: th:href="@{/customers}" を追加する -->
+          <a href="#" class="btn btn-outline-secondary">キャンセル</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
